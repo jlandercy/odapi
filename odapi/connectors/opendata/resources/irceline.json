@@ -1,0 +1,132 @@
+{
+  "source": {
+    "meta": {
+      "category": [
+        "opendata",
+        "air-quality"
+      ],
+      "legal": {
+        "name": "IRCELINE SOS API",
+        "credit": "IRCELINE",
+        "license": "Creative Common",
+        "provider": "52°North SOS",
+        "regulation": [
+          "INSPIRE 2007/2/EC"
+        ],
+        "documentation": "https://github.com/irceline/open_data"
+      }
+    },
+    "data": {
+      "flow": {
+        "class": "odapi.interfaces.TimeSerie",
+        "name": "Irceline",
+        "version": "0.1.0"
+      },
+      "API": {
+        "type": "RESTful-API",
+        "format": "JSON",
+        "authorization": {
+          "mode": "open"
+        },
+        "documentation": "http://geo.irceline.be/sos/static/doc/api-doc/",
+        "target": "http://geo.irceline.be/sos/api/v1/",
+        "endpoint": {
+          "metadata": "timeseries/?expanded=true",
+          "records": "timeseries/{serieid:}/getData/?timespan={start:%Y-%m-%dT%H:%MZ}/{stop:%Y-%m-%dT%H:%MZ}&force_latest_values=true"
+        }
+      }
+    }
+  },
+  "model": {
+    "keys": {
+      "mapping": {
+        "timeseries": {
+          "id": "serieid",
+          "uom": "serieunits",
+          "station.properties.id": "siteid",
+          "station.properties.label": "sitekey",
+          "station.geometry.coordinates": "geom",
+          "firstValue.timestamp": "start",
+          "lastValue.timestamp": "stop",
+          "parameters.phenomenon.id": "measureid",
+          "parameters.phenomenon.label": "measurename"
+        }
+      },
+      "translation": {
+        "measurekey": {
+          "1,2-xylene O-xylene": "OXL",
+          "Benzene": "BZN",
+          "Black Carbon": "BC",
+          "Carbon Dioxide": "CO2",
+          "Carbon Monoxide": "CO",
+          "Elemental gaseous mercury": "Hg",
+          "Ethylbenzene": "EBZ",
+          "M+P-xylene": "MPX",
+          "Nitrogen dioxide": "NO2",
+          "Nitrogen monoxide": "NO",
+          "Ozone": "O3",
+          "Particulate Matter < 1 \u00b5m": "PM-1.0",
+          "Particulate Matter < 10 \u00b5m": "PM-10.0",
+          "Particulate Matter < 2.5 \u00b5m": "PM-2.5",
+          "relative humidity": "RH",
+          "Sulphur dioxide": "SO2",
+          "temperature": "T",
+          "Toluene": "TOL",
+          "wind direction": "WD",
+          "wind speed (scalar)": "WS"
+        },
+        "unitskey": {
+          "percent": "%",
+          "degrees": "\u00b0G",
+          "C": "\u00b0C"
+        }
+      }
+    },
+    "tables": {
+      "events": [
+        {"label":"Car Free Day 2002","start":"2002-09-22T09:00:00+02:00","stop":"2002-09-22T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2003","start":"2003-09-21T09:00:00+02:00","stop":"2003-09-21T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2004","start":"2004-09-19T09:00:00+02:00","stop":"2004-09-19T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2005","start":"2005-09-18T09:00:00+02:00","stop":"2005-09-18T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2006","start":"2006-09-17T09:00:00+02:00","stop":"2006-09-17T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2007","start":"2007-09-23T09:00:00+02:00","stop":"2007-09-23T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2008","start":"2008-09-21T09:00:00+02:00","stop":"2008-09-21T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2009","start":"2009-09-20T09:00:00+02:00","stop":"2009-09-20T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2010","start":"2010-09-19T09:00:00+02:00","stop":"2010-09-19T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2011","start":"2011-09-18T09:00:00+02:00","stop":"2011-09-18T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2012","start":"2012-09-16T09:00:00+02:00","stop":"2012-09-16T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2013","start":"2013-09-22T09:00:00+02:00","stop":"2013-09-22T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2014","start":"2014-09-21T09:00:00+02:00","stop":"2014-09-21T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2015","start":"2015-09-20T09:30:00+02:00","stop":"2015-09-20T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2016","start":"2016-09-18T09:30:00+02:00","stop":"2016-09-18T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2017","start":"2017-09-17T09:30:00+02:00","stop":"2017-09-17T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2018","start":"2018-09-22T09:30:00+02:00","stop":"2018-09-22T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2019","start":"2019-09-22T09:30:00+02:00","stop":"2019-09-22T19:00:00+02:00","tags":"car-free"},
+        {"label":"Car Free Day 2020","start":"2020-09-19T09:30:00+02:00","stop":"2020-09-19T19:00:00+02:00","tags":"car-free"},
+        {"label":"PM Peak","start":"2020-03-27T00:00:00+01:00","stop":"2020-03-28T19:00:00+01:00","tags":["peak", "stability"],"measurekeys":["PM-10.0", "PM-2.5"]},
+        {"label":"COVID-19 Lockdown","start":"2020-03-19T00:00:00+01:00","stop": null,"tags":"lockdown","measurekeys":["NO", "BC"]}
+      ],
+      "limits": [
+        {"measurekey": "BC", "scale": [0, 10]},
+        {"measurekey": "CO2", "scale": [350, 550]},
+        {"measurekey": "CO", "scale": [0, 2]},
+        {"measurekey": "NO2", "scale": [0, 200], "norms": [40]},
+        {"measurekey": "NO", "scale": [0, 200]},
+        {"measurekey": "O3", "scale": [0, 200], "norms": [120, 180, 240]},
+        {"measurekey": "PM-10.0", "scale": [0, 150], "norms": [50]},
+        {"measurekey": "PM-2.5", "scale": [0, 100], "norms": [25]},
+        {"measurekey": "RH", "scale": [0, 100]},
+        {"measurekey": "SO2", "scale": [0, 15], "norms": [50]},
+        {"measurekey": "T", "scale": [-25, 50]},
+        {"measurekey": "TOL", "scale": [0, 25]},
+        {"measurekey": "WD", "scale": [0, 360]},
+        {"measurekey": "WS", "scale": [0, 20]},
+        {"measurekey": "BZN", "scale": [0, 10]},
+        {"measurekey": "TOL", "scale": [0, 25]},
+        {"measurekey": "EBZ", "scale": [0, 5]},
+        {"measurekey": "MPX", "scale": [0, 5]},
+        {"measurekey": "OXL", "scale": [0, 5]}
+      ]
+    }
+  }
+}

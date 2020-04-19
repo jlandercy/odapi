@@ -288,6 +288,7 @@ class Mix:
 def main():
     axe = Mix.plot()
     plt.show(axe.get_figure())
+    #axe.get_figure().savefig("psychro.png")
 
 
 if __name__ == "__main__":

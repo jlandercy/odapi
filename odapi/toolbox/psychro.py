@@ -161,10 +161,10 @@ class Mix:
         for i, k in enumerate(konsts):
             rmin = Mix.Tmin(f, k)
             if rmin.success:
-                Ts[i,0] = max(rmin.x[0], Tmin)
+                Ts[i, 0] = max(rmin.x[0], Tmin)
             rmax = Mix.Tmax(f, k)
             if rmax.success:
-                Ts[i,1] = min(rmax.x[0], Tmax)
+                Ts[i, 1] = min(rmax.x[0], Tmax)
         return Ts
 
     @staticmethod
@@ -195,8 +195,8 @@ class Mix:
         xT = np.full((ns, nk), np.nan)
         Ts = Mix.get_limits(f, konsts, Tmin, Tmax)
         for i, k in enumerate(konsts):
-            T[:,i] = np.linspace(*Ts[i,:], ns)
-            xT[:,i] = f(T[:,i], k)
+            T[:, i] = np.linspace(*Ts[i, :], ns)
+            xT[:, i] = f(T[:, i], k)
         return T, xT
     
     _requiredKeys = ('Tmin', 'Tmax', 'isow', 'isov', 'isoh', 'ylim')

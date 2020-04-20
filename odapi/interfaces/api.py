@@ -71,6 +71,7 @@ class API(abc.ABC):
         """
         self._credentials = SettingsFile.load(credentials)
         self._settings = SettingsFile.load(self._settings_path) or {}
+        self._meta = None
 
     @property
     def credentials(self):
@@ -192,8 +193,10 @@ class API(abc.ABC):
 
     @property
     def meta(self):
-        """Shortcut for metadata"""
-        return self.get_metadata()
+        """Shortcut for cached metadata"""
+        if self._meta is None:
+            self._meta = self.get_metadata()
+        return self._meta
 
     def select(self, **filters):
         """Select from meta"""

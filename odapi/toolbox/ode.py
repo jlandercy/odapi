@@ -27,13 +27,13 @@ class ODE:
     @classmethod
     def fit(cls, t, y, **kwargs):
         popt, pcov = optimize.curve_fit(cls.ivp, t, y, **kwargs)
-        return {'popt': popt, 'cov': pcov}
+        return {'popt': popt, 'pcov': pcov}
 
     @classmethod
     def regress(cls, t, y, **kwargs):
-        popt, pcov = optimize.curve_fit(cls.ivp, t, y, **kwargs)
-        yhat = cls.ivp(t, *popt)
-        return {'popt': popt, 'pcov': pcov, 'yhat': yhat}
+        sol = cls.fit(t, y, **kwargs)
+        sol.update({'yhat': cls.ivp(t, *sol['popt'])})
+        return sol
 
     @staticmethod
     def test(x, fexp, ddof=0):

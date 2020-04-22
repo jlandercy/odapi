@@ -10,6 +10,9 @@ from odapi.settings import settings
 
 
 class ODE:
+    """
+    Basic ODE Class
+    """
 
     @staticmethod
     @abc.abstractmethod
@@ -40,7 +43,10 @@ class ODE:
 
 
 class GGM(ODE):
-
+    """
+    Generalized Growth Model
+    :math:`\\dot{C}(t) = r C^p(t)`
+    """
     @staticmethod
     def ode(t, C, r, p):
         return r*np.power(C, p)
@@ -51,7 +57,10 @@ class GGM(ODE):
 
 
 class GRM(ODE):
-
+    """
+    Generialized Richards Model:
+    :math:`\\dot{C}(t) = r C^p\\left[1-\\left(\\frac{C}{K}\\right)^a\\right]`
+    """
     @staticmethod
     def ode(t, C, r, p, K, a):
         return r*np.power(C, p)*(1-np.power((C/K),a))

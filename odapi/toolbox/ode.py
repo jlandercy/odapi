@@ -22,15 +22,15 @@ class ODE:
         pass
 
     @classmethod
-    def fit(cls, t, y):
-        popt, pcov = optimize.curve_fit(cls.ivp, t, y)
+    def fit(cls, t, y, **kwargs):
+        popt, pcov = optimize.curve_fit(cls.ivp, t, y, **kwargs)
         return {'popt': popt, 'cov': pcov}
 
     @classmethod
-    def regress(cls, t, y):
-        popt, pcov = optimize.curve_fit(cls.ivp, t, y)
+    def regress(cls, t, y, **kwargs):
+        popt, pcov = optimize.curve_fit(cls.ivp, t, y, **kwargs)
         yhat = cls.ivp(t, *popt)
-        return {'popt': popt, 'cov': pcov, 'yhat': yhat}
+        return {'popt': popt, 'pcov': pcov, 'yhat': yhat}
 
     @staticmethod
     def test(x, fexp, ddof=0):
@@ -58,26 +58,11 @@ class GRM(ODE):
 
     @staticmethod
     def ivp(t, C, r, p, K, a):
-        return integrate.solve_ivp(GRM.ode, (t[0], t[-1]), [C], t_eval=t, args=(r, p, K, a)).y[0]
+        return integrate.solve_ivp(GRM.ode, (t[0], t[-1]), [C], t_eval=t, args=(r, p, K, a),
+                                   method='DOP853', rtol=1e-6).y[0]
 
 
 def main():
-
-    model = GGM()
-    t = np.linspace(0, 20, 100)
-    p = (1, 2, 0.7)
-    y = model.ivp(t, *p)
-    print(y)
-    yh = model.regress(t, y)['yhat']
-    print(yh)
-
-    fig, axe = plt.subplots()
-    axe.semilogy(t, y, 'o', label='Original')
-    axe.semilogy(t, yh, label='LM Fit')
-    axe.legend()
-    axe.grid(which='both', color='lightgray')
-    plt.show()
-
     sys.exit(0)
 
 

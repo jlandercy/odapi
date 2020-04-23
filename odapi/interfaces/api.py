@@ -205,10 +205,15 @@ class API(abc.ABC):
         meta = self.meta
 
         def query(k, v, m=meta):
-            if isinstance(v, str):
-                return meta[k].str.match(v).values
+            if isinstance(v, int):
+                x = (meta[k] == v)
+            elif isinstance(v, str):
+                x = meta[k].str.match(v)
             elif isinstance(v, list):
                 return np.bitwise_or.reduce(np.array([query(k, v2, m=m) for v2 in v]), 0)
+            # Handle missing value:
+            x[meta[k].isnull()] = False
+            return x.values
 
         queries = []
         for key in filters:

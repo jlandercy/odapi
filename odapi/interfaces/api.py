@@ -1,10 +1,8 @@
 import sys
 import abc
-import pathlib
-import json
+import collections
 
 import numpy as np
-import pandas as pd
 
 from odapi.settings import settings
 from odapi.toolbox.generic import SettingsFile
@@ -205,12 +203,15 @@ class API(abc.ABC):
         meta = self.meta
 
         def query(k, v, m=meta):
-            if isinstance(v, int):
-                x = (meta[k] == v)
-            elif isinstance(v, str):
+            # Branch on value type:
+            if isinstance(v, str):
+                # Allow regexp:
                 x = meta[k].str.match(v)
-            elif isinstance(v, list):
+            elif isinstance(v, collections.abc.Iterable):
+                # Apply on iterable
                 return np.bitwise_or.reduce(np.array([query(k, v2, m=m) for v2 in v]), 0)
+            else:
+                x = (meta[k] == v)
             # Handle missing value:
             x[meta[k].isnull()] = False
             return x.values

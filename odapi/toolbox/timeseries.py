@@ -79,7 +79,7 @@ class TimeSeries:
 
         # Default Parameters:
         if key is False:
-            identifiers = None
+            pass
         elif isinstance(identifiers, (int, str)):
             identifiers = set([identifiers])
         elif isinstance(identifiers, pd.DataFrame):

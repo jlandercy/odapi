@@ -78,7 +78,9 @@ class TimeSeries:
         """
 
         # Default Parameters:
-        if isinstance(identifiers, (int, str)):
+        if key is False:
+            identifiers = None
+        elif isinstance(identifiers, (int, str)):
             identifiers = set([identifiers])
         elif isinstance(identifiers, pd.DataFrame):
             identifiers = set(identifiers[key or cls._primary_key])

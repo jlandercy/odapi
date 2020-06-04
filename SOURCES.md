@@ -27,3 +27,5 @@ Open Data API explicitly relies on the following packages:
  - IRCELINE Air Quality Measurment Sites (Points) INSPIRE/CC4.0
  - ArcGIS Hub World Countries
  - URBIS Brussels Open Data Portal
+ 
+https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts

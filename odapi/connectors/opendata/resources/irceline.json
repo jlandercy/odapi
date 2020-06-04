@@ -149,7 +149,7 @@
         {"measurekey": "WD", "molarmass": null, "factor": null},
         {"measurekey": "WS-s", "molarmass": null, "factor": null}
       ],
-      "sitetype": [
+      "sitetypes": [
         {"sitekey": "40AB01", "sitetype": "Background"},
         {"sitekey": "40AL01", "sitetype": "Industrial"},
         {"sitekey": "40AL02", "sitetype": "Industrial"},

@@ -3,6 +3,7 @@ import abc
 import collections
 
 import numpy as np
+import pandas as pd
 
 from odapi.settings import settings
 from odapi.toolbox.generic import SettingsFile
@@ -120,6 +121,9 @@ class API(abc.ABC):
     def tables(self):
         """Return Tables"""
         return self.model['tables']
+
+    def table(self, key):
+        return pd.DataFrame(self.tables[key])
 
     @abc.abstractmethod
     def _get_token(self, **kwargs):

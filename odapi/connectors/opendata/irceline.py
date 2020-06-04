@@ -41,16 +41,19 @@ class Irceline(TimeSeriesAPI):
         # Casts & postprocessing
         df['measurekey'] = df['measurename'].replace(self.translation['measurekey'])
         df['serieunits'] = df['serieunits'].replace(self.translation['unitskey'])
-        df['start'] = pd.to_datetime(df['start'], origin='unix', unit='ms', utc=True)
-        df['stop'] = pd.to_datetime(df['stop'], origin='unix', unit='ms', utc=True)
+        df['started'] = pd.to_datetime(df['start'], origin='unix', unit='ms', utc=True)
+        df['stopped'] = pd.to_datetime(df['stop'], origin='unix', unit='ms', utc=True)
         df['sitename'] = df['sitekey'].apply(lambda x: "-".join(x.split('-')[1:]))
         df['sitekey'] = df['sitekey'].apply(lambda x: x.split('-')[0].strip())
         df['seriekey'] = df['measurekey'] + '/' + df['sitekey'] + ' (' + df['serieunits'] + ')'
         df['lat'] = df['geom'].apply(lambda x: x[0])
         df['lon'] = df['geom'].apply(lambda x: x[1])
+        df = df.merge(self.table('sitetypes'), how='left')
+        df = df.merge(self.table('factors'), how='left')
         settings.logger.debug("FRAME: {} metadata fetched".format(df.shape))
         return df.loc[:, ['serieid', 'siteid', 'measureid', 'serieunits', 'measurekey', 'measurename',
-                          'sitekey', 'sitename', 'seriekey', 'lat', 'lon', 'start', 'stop']]
+                          'sitekey', 'sitename', 'seriekey', 'molarmass', 'factor',
+                          'sitetype', 'lat', 'lon', 'started', 'stopped']]
 
     def get_records(self, identifiers, start=None, stop=None, sentinel=-99.9):
         """Get Records"""
@@ -87,19 +90,21 @@ class Irceline(TimeSeriesAPI):
     def sites(self):
         df = self.meta.groupby(['siteid', 'sitekey', 'sitename', 'lon', 'lat']).agg({
             'serieid': list, 'measureid': set, 'measurekey': set,
-            'start': 'min', 'stop': 'max'
+            'started': 'min', 'stopped': 'max'
         })
         df['count'] = df['serieid'].apply(len)
-        return df.sort_values('sitekey').reset_index()
+        df = df.sort_values('sitekey').reset_index()
+        return df.merge(self.table('sitetypes'), how='left')
 
     @property
     def measures(self):
         df = self.meta.groupby(['measureid', 'measurekey', 'measurename']).agg({
             'serieid': list, 'siteid': set, 'sitekey': set, 'serieunits': set,
-            'start': 'min', 'stop': 'max'
+            'started': 'min', 'stopped': 'max'
         })
         df['count'] = df['serieid'].apply(len)
-        return df.sort_values('measurekey').reset_index()
+        df = df.sort_values('measurekey').reset_index()
+        return df.merge(self.table('factors'), how='left')
 
     @property
     def events(self):
@@ -118,6 +123,8 @@ def main():
     c = Irceline()
     s = c.select(measurekey=['NO', 'CO2'], sitekey='41.*')
     print(s)
+
+    print(c.sites)
 
     sys.exit(0)
 

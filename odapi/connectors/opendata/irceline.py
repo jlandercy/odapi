@@ -53,7 +53,8 @@ class Irceline(TimeSeriesAPI):
         settings.logger.debug("FRAME: {} metadata fetched".format(df.shape))
         return df.loc[:, ['serieid', 'siteid', 'measureid', 'serieunits', 'measurekey', 'measurename',
                           'sitekey', 'sitename', 'seriekey', 'molarmass', 'factor',
-                          'sitetype', 'lat', 'lon', 'started', 'stopped']]
+                          'siteloctype', 'sitesourcetype', 'lat', 'lon', 'nuts1id', 'nuts2id', 'nuts3id',
+                          'started', 'stopped']]
 
     def get_records(self, identifiers, start=None, stop=None, sentinel=-99.9):
         """Get Records"""

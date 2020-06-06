@@ -55,6 +55,7 @@ class Irceline(TimeSeriesAPI):
                           'sitekey', 'sitename', 'seriekey', 'molarmass', 'factor',
                           'siteloctype', 'sitesourcetype', 'lat', 'lon',
                           'nuts1id', 'nuts2id', 'nuts3id', 'nuts1name', 'nuts2name', 'nuts3name',
+                          'lauid', 'launame',
                           'started', 'stopped']]
 
     def get_records(self, identifiers, start=None, stop=None, sentinel=-99.9):

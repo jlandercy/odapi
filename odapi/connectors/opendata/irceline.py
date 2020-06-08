@@ -97,7 +97,8 @@ class Irceline(TimeSeriesAPI):
         })
         df['count'] = df['serieid'].apply(len)
         df = df.sort_values('sitekey').reset_index()
-        return df.merge(self.table('sitetypes'), how='left')
+        df = df.merge(self.table('sitetypes'), how='left')
+        return df
 
     @property
     def measures(self):

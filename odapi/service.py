@@ -14,7 +14,7 @@ def feed(connection, **kwargs):
     # Get data:
     client = getattr(connectors, kwargs.get("connector", "Irceline"))()
     meta = client.select(**kwargs.get("channels", {})).loc[:,kwargs.get("tagkeys", slice(None))]
-    recs = client.get_records(meta, **kwargs.get("records", {})).dropna(subset=['value'])
+    recs = client.get_records(meta, **kwargs.get("records", {})).dropna(subset=kwargs.get("dropna", []))
     data = recs.merge(meta).assign(**kwargs.get('tags', {}))
     tagkeys = set(kwargs.get("tagkeys", {})).union(set(kwargs.get('tags', {}).keys()))
 

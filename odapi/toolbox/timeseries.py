@@ -111,10 +111,10 @@ class TimeSeries:
         settings.logger.debug("PARAM: {}".format(res))
         return res
 
-    @abc.abstractmethod
-    def get_records(self, identifiers, start=None, stop=None, **kwargs):
-        """Get Records"""
-        pass
+    # @abc.abstractmethod
+    # def get_records(self, identifiers, start=None, stop=None, **kwargs):
+    #     """Get Records"""
+    #     pass
 
     @property
     def events(self):

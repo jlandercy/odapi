@@ -58,10 +58,10 @@ class Irceline(TimeSeriesAPI):
                           'lauid', 'launame',
                           'started', 'stopped']]
 
-    def get_records(self, identifiers, start=None, stop=None, sentinel=-99.9):
+    def get_records(self, identifiers, start=None, stop=None, span=None, sentinel=-99.9):
         """Get Records"""
         # Irceline API select timestamp on end of sample period and include both sides (1 year at once max)
-        params = self.prepare_parameters(identifiers, start=start, stop=stop, timezone='UTC')
+        params = self.prepare_parameters(identifiers, start=start, stop=stop, span=span, timezone='UTC')
         params = self.prepare_parameters(identifiers,
                                          start=params['start'] + pd.Timedelta('1H'),
                                          stop=params['stop'], freq='YS')

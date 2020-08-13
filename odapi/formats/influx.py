@@ -59,7 +59,7 @@ def main():
     t1 = pd.Timestamp.utcnow().floor('1D')
     t0 = t1 - pd.Timedelta('1D')
     q = """
-    SELECT * FROM "smartcampus_jupyterhub"."autogen"."DigitalMeter"
+    SELECT * FROM "jupyterhub"."autogen"."DigitalMeter"
     WHERE "time" >= '{}' AND "time" < '{}'
     GROUP BY "meter";
     """.format(t0.isoformat(), t1.isoformat())

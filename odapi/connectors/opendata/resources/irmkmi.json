@@ -1,0 +1,60 @@
+{
+  "source": {
+    "meta": {
+      "category": [
+        "opendata",
+        "air-quality"
+      ],
+      "legal": {
+        "name": "IRM-KMI Webservice",
+        "credit": "IRM-KMI",
+        "license": "Inspire",
+        "provider": "AWS",
+        "regulation": [
+          "INSPIRE 2007/2/EC"
+        ],
+        "documentation": "https://opendata.meteo.be/"
+      }
+    },
+    "data": {
+      "flow": {
+        "class": "odapi.interfaces.TimeSerie",
+        "name": "IRMKMI",
+        "version": "0.1.0"
+      },
+      "API": {
+        "type": "RESTful-API",
+        "format": "GeoJSON",
+        "authorization": {
+          "mode": "open"
+        },
+        "documentation": "http://geo.irceline.be/sos/static/doc/api-doc/",
+        "target": "https://opendata.meteo.be/service/ows",
+        "endpoint": {
+          "metadata": "timeseries/?expanded=true",
+          "records": "?service=WFS&version=2.0.0&request=GetFeature&typenames=aws:aws_10min&outputformat=json&CQL_FILTER=((BBOX(the_geom,3.201846,50.193663,5.255236,51.347375,%20%27EPSG:4326%27))%20AND%20(timestamp%20%3E=%20%27{start:}%27%20AND%20timestamp%20%3C=%20%27{stop:}%27))&sortby=timestamp\n"
+        }
+      }
+    }
+  },
+  "model": {
+    "keys": {
+      "mapping": {
+        "timeseries": {
+          "id": "serieid",
+          "uom": "serieunits",
+          "station.properties.id": "siteid",
+          "station.properties.label": "sitekey",
+          "station.geometry.coordinates": "geom",
+          "firstValue.timestamp": "start",
+          "lastValue.timestamp": "stop",
+          "parameters.phenomenon.id": "measureid",
+          "parameters.phenomenon.label": "measurename"
+        }
+      }
+    },
+    "tables": {
+
+    }
+  }
+}

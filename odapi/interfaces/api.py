@@ -202,29 +202,30 @@ class API(abc.ABC):
 
     def select(self, **filters):
         """Select from meta"""
-
         settings.logger.debug("Selection Keys: {}".format(filters))
         meta = self.meta
+        if filters:
+            def query(k, v, m=meta):
+                # Branch on value type:
+                if isinstance(v, str):
+                    # Allow regexp:
+                    x = meta[k].str.match(v)
+                elif isinstance(v, collections.abc.Iterable):
+                    # Apply on iterable
+                    return np.bitwise_or.reduce(np.array([query(k, v2, m=m) for v2 in v]), 0)
+                else:
+                    x = (meta[k] == v)
+                # Handle missing value:
+                x[meta[k].isnull()] = False
+                return x.values
 
-        def query(k, v, m=meta):
-            # Branch on value type:
-            if isinstance(v, str):
-                # Allow regexp:
-                x = meta[k].str.match(v)
-            elif isinstance(v, collections.abc.Iterable):
-                # Apply on iterable
-                return np.bitwise_or.reduce(np.array([query(k, v2, m=m) for v2 in v]), 0)
-            else:
-                x = (meta[k] == v)
-            # Handle missing value:
-            x[meta[k].isnull()] = False
-            return x.values
+            queries = []
+            for key in filters:
+                queries.append(query(key, filters[key], m=meta))
 
-        queries = []
-        for key in filters:
-            queries.append(query(key, filters[key], m=meta))
-
-        queries = np.bitwise_and.reduce(np.array(queries), 0)
+            queries = np.bitwise_and.reduce(np.array(queries), 0)
+        else:
+            queries = np.ones(meta.shape[0])
         selection = meta.loc[queries, :]
         settings.logger.debug("Selected {} row(s): {}".format(selection.shape[0], set(selection[self._primary_key])))
         return selection

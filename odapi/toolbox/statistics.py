@@ -90,7 +90,7 @@ def main():
     r1 = StatisticalTest.apply(df, df, mode="pairwise", test="student")
     print(r1)
 
-    r2 = StatisticalTest.apply(df, df, mode="product", test="student")
+    r2 = StatisticalTest.apply(df, df, mode="product", test="kolmogorov")
     print(r2)
 
     sys.exit(0)

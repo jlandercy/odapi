@@ -83,7 +83,9 @@ class StatisticalTest:
             tobj = func(ref[kref], exp[kexp], **params)
             result["class"] = tobj.__class__.__name__
             result["params"] = params
-            result.update({k: getattr(tobj, k) for k in tobj._fields})
+            if not isinstance(tobj, dict):
+                tobj = {k: getattr(tobj, k) for k in tobj._fields}
+            result.update(tobj)
             results.append(result)
         return pd.DataFrame(results)
 

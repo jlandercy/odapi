@@ -3,3 +3,4 @@ from odapi.toolbox.timeseries import TimeSeries
 from odapi.toolbox.weather import Weather, Wind, Humidity, Sun
 from odapi.toolbox.energy import EnergyMeter
 from odapi.toolbox.synthetic import FakeSignal
+from odapi.toolbox.statistics import StatisticalTest

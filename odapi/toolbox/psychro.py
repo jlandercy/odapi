@@ -9,8 +9,8 @@ class Constants:
     """
     Physical Constants
     """
-    R = 8.314472                   # J/mol.K
-    T0K = 273.15                   # K
+    R = 8.314472                   # [J/mol.K]
+    T0K = 273.15                   # [K]
 
     @staticmethod
     def TK(TC):
@@ -31,8 +31,8 @@ class Conditions:
     """
     Standard Conditions
     """
-    p0 = 1.01325e5                 # Pa
-    T0 = 0 + Constants.T0K         # K
+    p0 = 1.01325e5                 # [Pa]
+    T0 = 0 + Constants.T0K         # [K]
 
 
 class Water:

@@ -13,7 +13,7 @@ from odapi.settings import settings
 class IRMKMI(TimeSeriesAPI):
 
     _settings_path = pathlib.Path(__file__).parent / 'resources/irmkmi.json'
-    _primary_key = 'serieid'
+    _primary_key = 'siteid'
 
     def __init__(self, credentials=None):
         """Initialize IRCELINE API"""

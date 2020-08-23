@@ -31,7 +31,7 @@
         "documentation": "http://geo.irceline.be/sos/static/doc/api-doc/",
         "target": "https://opendata.meteo.be/service/ows",
         "endpoint": {
-          "metadata": "?service=WFS&version=2.0.0&request=GetFeature&typenames=aws:aws_10min&outputformat=json&CQL_FILTER=((BBOX(the_geom,3.201846,50.193663,5.255236,51.347375, 'EPSG:4326')) AND (timestamp >= '2020-08-01 00:00:00' AND timestamp <= '2020-08-02 00:00:00'))&sortby=timestamp",
+          "metadata": "?service=WFS&version=2.0.0&request=GetFeature&typenames=aws:aws_10min&outputformat=json&CQL_FILTER=((BBOX(the_geom,3.201846,50.193663,5.255236,51.347375, 'EPSG:4326')) AND (timestamp >= '2020-08-01 00:00:00' AND timestamp <= '2020-08-14 00:00:00'))&sortby=timestamp",
           "records": "?service=WFS&version=2.0.0&request=GetFeature&typenames=aws:aws_10min&outputformat=json&CQL_FILTER=((timestamp >= '{start:%Y-%m-%d %H:%M:%S}' AND timestamp <= 'stop:%Y-%m-%d %H:%M:%S'))&sortby=timestamp"
         }
       }

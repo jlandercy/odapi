@@ -11,8 +11,11 @@ class StatisticalTest:
 
     _available_test = {
         "student": "welch",
+        "T-Test": "welch",
         "welch": (stats.ttest_ind, {"equal_var": False, "nan_policy": "omit"}),
-        "kolmogorov": stats.ks_2samp
+        "kolmogorov": stats.ks_2samp,
+        "kolmogorov-smirnov": "kolmogorov",
+        "KS-Test": "kolmogorov"
     }
 
     @staticmethod
@@ -36,18 +39,23 @@ class StatisticalTest:
 
     @staticmethod
     def get_test(test):
-        if test in vars(stats):
-            f = getattr(stats, test)
-        elif test in StatisticalTest._available_test:
-            f = StatisticalTest._available_test[test]
-            if isinstance(f, str):
-                f = StatisticalTest._available_test[f]
+        if callable(test):
+            return test, {}
+        elif isinstance(test, str):
+            if test in vars(stats):
+                f = getattr(stats, test)
+            elif test in StatisticalTest._available_test:
+                f = StatisticalTest._available_test[test]
+                if isinstance(f, str):
+                    f = StatisticalTest._available_test[f]
+            else:
+                raise KeyError("Unknown test '{}'".format(test))
+            if callable(f):
+                return f, {}
+            else:
+                return f
         else:
-            raise KeyError("Unknown test '{}'".format(test))
-        if callable(f):
-            return f, {}
-        else:
-            return f
+            TypeError("Test must be either a function or a function name (str), received {} instead".format(type(test)))
 
     @staticmethod
     def apply(ref, exp, test='student', mode='product', extra=True, **params):
@@ -55,8 +63,9 @@ class StatisticalTest:
         Apply Statistical Test on reference and experimental DataFrame
         :param ref:
         :param exp:
-        :param func:
+        :param test:
         :param mode:
+        :param extra:
         :param params:
         :return:
         """
@@ -87,10 +96,13 @@ def main():
     df = pd.DataFrame(np.random.randn(30, 3), columns=["a", "b", "c"])
     print(df)
 
-    r1 = StatisticalTest.apply(df, df, mode="pairwise", test="student")
+    r1 = StatisticalTest.apply(df, df, mode="product", test="T-Test")
     print(r1)
 
-    r2 = StatisticalTest.apply(df, df, mode="product", test="kolmogorov")
+    r2 = StatisticalTest.apply(df, df, mode="product", test="KS-Test")
+    print(r2)
+
+    r2 = StatisticalTest.apply(df, df, mode="product", test=stats.ttest_ind)
     print(r2)
 
     sys.exit(0)

@@ -14,11 +14,12 @@ class InfluxDB(Converter):
         frames = []
         for serie in result['series']:
             frame = pd.DataFrame(serie['values'], columns=serie['columns'])
+            frame = frame.assign(serie_name=serie["name"])
             frame = frame.assign(**serie['tags'])
             frames.append(frame)
         frames = pd.concat(frames)
         frames['time'] = pd.to_datetime(frames['time'])
-        frame = frames.rename(columns={'time': timekey})
+        frames = frames.rename(columns={'time': timekey})
         return frames
 
     @staticmethod

@@ -16,4 +16,5 @@
 
 ## odapi v0.1
 
-- [x] `v0.1.0`: **`2020-04-18`**: `added`: First stable release with TDD on board.
+- [x] `v0.1.0`: **`2020-04-18`**: `add`: First stable release with TDD on board
+- [x] `v0.1.1`: **`2020-10-02`**: `update`: Added converter to package init

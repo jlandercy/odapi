@@ -129,6 +129,8 @@ def main():
     print(s)
 
     print(c.sites)
+    r = c.get_records(s)
+    print(r)
 
     sys.exit(0)
 

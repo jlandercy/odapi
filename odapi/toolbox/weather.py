@@ -174,8 +174,9 @@ class Wind:
         return axes
 
     @staticmethod
-    def rose(data, x, theta='WD/41R001 (°G)', qbins=True, points=False, means=True, cbar=True,
-             q=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6), linewidth=0.):
+    def rose(data, x, theta='Wind Direction/41R001 (°G)', qbins=True, points=False, means=True, cbar=True,
+             q=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6),
+             mode="polygon", edgecolor="white", linewidth=0.35):
         """
         Return polar axe with percentile rose, points and means
 
@@ -189,6 +190,9 @@ class Wind:
         :param q: Percentile bins boundaries
         :param cmap: Colormap theme
         :param figsize: Figure Size
+        :param mode: Plot mode
+        :param edgecolor: Bar edge color
+        :param linewidth: Bar linewidth
 
         :return: An axe holding the Percentile Rose
         """
@@ -237,13 +241,18 @@ class Wind:
             for i in range(g.shape[0]):
                 for j in range(g.shape[1] - 1):
                     col = cmap(1.1 * g.columns.levels[1][j])
-                    # Bar Version (bug):
-                    # axe.bar(b[i]+db/2, g.iloc[i, j+1], width=db, bottom=g.iloc[i, j],
-                    #        color=col, edgecolor='white', linewidth=0.)
-                    # Polygon version (reference):
-                    axe.fill([b[i], b[i], b[i + 1], b[i + 1]],
-                             [g.iloc[i, j], g.iloc[i, j + 1], g.iloc[i, j + 1], g.iloc[i, j]],
-                             color=col, edgecolor='black', linewidth=linewidth)
+                    if mode == "polygon":
+                        # Polygon version (reference):
+                        axe.fill([b[i], b[i], b[i + 1], b[i + 1]],
+                                 [g.iloc[i, j], g.iloc[i, j + 1], g.iloc[i, j + 1], g.iloc[i, j]],
+                                 color=col, edgecolor=edgecolor, linewidth=linewidth)
+                    elif mode == "bar":
+                        axe.bar(b[i]+db/2, g.iloc[i, j+1], width=db, bottom=g.iloc[i, j],
+                                color=col, edgecolor=edgecolor, linewidth=linewidth)
+                    else:
+                        raise ValueError("Rose mode must be in {polygon, bar}")
+
+
 
         return axe
 

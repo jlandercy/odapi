@@ -70,6 +70,8 @@
           "Particulate Matter < 2.5 \u00b5m": "PM-2.5",
           "relative humidity": "RH",
           "Sulphur dioxide": "SO2",
+          "pressure": "p",
+          "Pressure": "p",
           "temperature": "T",
           "Temperature": "T",
           "Toluene": "TOL",
@@ -122,10 +124,11 @@
         {"measurekey": "PM-2.5", "scale": [0, 100], "norms": [25]},
         {"measurekey": "RH", "scale": [0, 100]},
         {"measurekey": "SO2", "scale": [0, 15], "norms": [50]},
-        {"measurekey": "T", "scale": [-25, 50]},
+        {"measurekey": "T", "scale": [-15, 40]},
         {"measurekey": "TOL", "scale": [0, 25]},
+        {"measurekey": "p", "scale": [950, 1150]},
         {"measurekey": "WD", "scale": [0, 360]},
-        {"measurekey": "WS", "scale": [0, 20]},
+        {"measurekey": "WS", "scale": [0, 15]},
         {"measurekey": "BZN", "scale": [0, 10]},
         {"measurekey": "TOL", "scale": [0, 25]},
         {"measurekey": "EBZ", "scale": [0, 5]},
@@ -152,7 +155,8 @@
         {"measurekey": "T", "molarmass": null, "factor": null},
         {"measurekey": "TOL", "molarmass": 92.13, "factor": 0.2609595763974939},
         {"measurekey": "WD", "molarmass": null, "factor": null},
-        {"measurekey": "WS", "molarmass": null, "factor": null}
+        {"measurekey": "WS", "molarmass": null, "factor": null},
+        {"measurekey": "p", "molarmass": null, "factor": null}
       ],
       "sitetypes": [
         {"siteid": 1027, "sitekey": "40AB01", "eoicode": "BELAB01", "zonecode": null, "sitelocation": "Suburban", "sitetype_old": "Background", "sitetype": "Background", "countrycode": "BE", "nuts3id": "BE211", "nuts3name": "Antwerpen", "nuts3urbantype": 1, "nuts2id": "BE21", "nuts2name": "Antwerpen", "nuts1id": "BE2", "nuts1name": "VLAAMS GEWEST", "launame": "Antwerpen", "lauid": "BE_11002", "osmid": 2271280777, "osmtype": "node", "addressdisplay": "40AB01, Kruisschansweg, Antwerpen, Vlaanderen, 2030, Belgi\u00eb - Belgique - Belgien", "addressdetails": {"man_made": "40AB01", "road": "Kruisschansweg", "city_district": "Antwerpen", "city": "Antwerpen", "county": "Antwerpen", "state": "Vlaanderen", "postcode": "2030", "country": "Belgi\u00eb - Belgique - Belgien", "country_code": "be"}, "postcode": "2030"},

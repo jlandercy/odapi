@@ -176,7 +176,7 @@ class Wind:
     @staticmethod
     def rose(data, x, theta='WD/41R001 (°G)', qbins=True, points=False, means=True, cbar=True,
              q=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6),
-             mode="polygon", edgecolor="white", linewidth=0.0):
+             mode="bar", edgecolor="white", linewidth=0.0):
         """
         Return polar axe with percentile rose, points and means
 
@@ -242,13 +242,11 @@ class Wind:
                 for j in range(g.shape[1] - 1):
                     col = cmap(1.1 * g.columns.levels[1][j])
                     if mode == "polygon":
-                        # Polygon version (reference):
                         axe.fill([b[i], b[i], b[i + 1], b[i + 1]],
                                  [g.iloc[i, j], g.iloc[i, j + 1], g.iloc[i, j + 1], g.iloc[i, j]],
                                  color=col, edgecolor=edgecolor, linewidth=linewidth)
                     elif mode == "bar":
-                        # Buggy (bar radius is not correct):
-                        axe.bar(b[i]+db/2, g.iloc[i, j+1], width=db, bottom=g.iloc[i, j],
+                        axe.bar(b[i]+db/2, g.iloc[i, j+1] - g.iloc[i, j], width=db, bottom=g.iloc[i, j],
                                 color=col, edgecolor=edgecolor, linewidth=linewidth)
                     else:
                         raise ValueError("Rose mode must be in {polygon, bar}")

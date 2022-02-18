@@ -71,9 +71,12 @@
           "relative humidity": "RH",
           "Sulphur dioxide": "SO2",
           "temperature": "T",
+          "Temperature": "T",
           "Toluene": "TOL",
           "wind direction": "WD",
-          "wind speed (scalar)": "WS"
+          "Wind Direction": "WD",
+          "wind speed (scalar)": "WS",
+          "Wind Speed (scalar)": "WS"
         },
         "unitskey": {
           "percent": "%",

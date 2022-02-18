@@ -161,7 +161,7 @@ class Wind:
         """
         wd = data[[theta]].apply(Wind.direction)
         bo = Wind.coordinates()
-        fig, axes = plt.subplots(2, 1, sharex=True, gridspec_kw={'hspace': 0.05, 'height_ratios': [7, 3]})
+        fig, axes = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [7, 3]})
         pair = pd.concat([data[x], wd], axis=1).dropna()
         pair.boxplot(x, by=theta, positions=bo.sort_values('label').index, rot=90, ax=axes[0])
         pair.groupby(theta)[x].count()[bo.label].plot(kind='bar', ax=axes[1])
@@ -176,7 +176,7 @@ class Wind:
     @staticmethod
     def rose(data, x, theta='Wind Direction/41R001 (°G)', qbins=True, points=False, means=True, cbar=True,
              q=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6),
-             mode="polygon", edgecolor="white", linewidth=0.35):
+             mode="polygon", edgecolor="white", linewidth=0.0):
         """
         Return polar axe with percentile rose, points and means
 
@@ -247,6 +247,7 @@ class Wind:
                                  [g.iloc[i, j], g.iloc[i, j + 1], g.iloc[i, j + 1], g.iloc[i, j]],
                                  color=col, edgecolor=edgecolor, linewidth=linewidth)
                     elif mode == "bar":
+                        # Buggy:
                         axe.bar(b[i]+db/2, g.iloc[i, j+1], width=db, bottom=g.iloc[i, j],
                                 color=col, edgecolor=edgecolor, linewidth=linewidth)
                     else:

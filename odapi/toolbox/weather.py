@@ -248,7 +248,7 @@ class Wind:
                                  color=col, edgecolor=edgecolor, linewidth=linewidth)
                     elif mode == "bar":
                         # Buggy (bar radius is not correct):
-                        axe.bar(b[i]+db/2, g.iloc[i, j+1], width=db, bottom=g.iloc[i, j],
+                        axe.bar(b[i]+db/2, g.iloc[i, j+1] - g.iloc[i, j], width=db, bottom=g.iloc[i, j],
                                 color=col, edgecolor=edgecolor, linewidth=linewidth)
                     else:
                         raise ValueError("Rose mode must be in {polygon, bar}")

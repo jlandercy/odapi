@@ -152,7 +152,7 @@
         {"measurekey": "T", "molarmass": null, "factor": null},
         {"measurekey": "TOL", "molarmass": 92.13, "factor": 0.2609595763974939},
         {"measurekey": "WD", "molarmass": null, "factor": null},
-        {"measurekey": "WS-s", "molarmass": null, "factor": null}
+        {"measurekey": "WS", "molarmass": null, "factor": null}
       ],
       "sitetypes": [
         {"siteid": 1027, "sitekey": "40AB01", "eoicode": "BELAB01", "zonecode": null, "sitelocation": "Suburban", "sitetype_old": "Background", "sitetype": "Background", "countrycode": "BE", "nuts3id": "BE211", "nuts3name": "Antwerpen", "nuts3urbantype": 1, "nuts2id": "BE21", "nuts2name": "Antwerpen", "nuts1id": "BE2", "nuts1name": "VLAAMS GEWEST", "launame": "Antwerpen", "lauid": "BE_11002", "osmid": 2271280777, "osmtype": "node", "addressdisplay": "40AB01, Kruisschansweg, Antwerpen, Vlaanderen, 2030, Belgi\u00eb - Belgique - Belgien", "addressdetails": {"man_made": "40AB01", "road": "Kruisschansweg", "city_district": "Antwerpen", "city": "Antwerpen", "county": "Antwerpen", "state": "Vlaanderen", "postcode": "2030", "country": "Belgi\u00eb - Belgique - Belgien", "country_code": "be"}, "postcode": "2030"},

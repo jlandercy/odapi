@@ -174,7 +174,7 @@ class Wind:
         return axes
 
     @staticmethod
-    def rose(data, x, theta='Wind Direction/41R001 (°G)', qbins=True, points=False, means=True, cbar=True,
+    def rose(data, x, theta='WD/41R001 (°G)', qbins=True, points=False, means=True, cbar=True,
              q=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6),
              mode="polygon", edgecolor="white", linewidth=0.0):
         """

@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 
 from odapi.settings import settings
 from odapi.errors import BadParameter
@@ -197,6 +198,8 @@ class Wind:
 
         # Create Polar Axis (projection cannot be changed after axe creation):
         fig, axe = plt.subplots(figsize=figsize, subplot_kw={'projection': 'polar'})
+        ticks = axe.get_xticks().tolist()
+        axe.xaxis.set_major_locator(mticker.FixedLocator(ticks))
         axe.set_xticklabels(['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'], fontsize=10)
         axe.set_title(x)
 

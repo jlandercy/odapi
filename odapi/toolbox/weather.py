@@ -175,7 +175,7 @@ class Wind:
 
     @staticmethod
     def rose(data, x, theta='WD/41R001 (°G)', qbins=True, points=False, means=True, cbar=True,
-             q=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6)):
+             q=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6), linewidth=0.):
         """
         Return polar axe with percentile rose, points and means
 
@@ -198,6 +198,8 @@ class Wind:
 
         # Create Polar Axis (projection cannot be changed after axe creation):
         fig, axe = plt.subplots(figsize=figsize, subplot_kw={'projection': 'polar'})
+        # Removed warning:
+        # https://stackoverflow.com/questions/63723514/userwarning-fixedformatter-should-only-be-used-together-with-fixedlocator
         ticks = axe.get_xticks().tolist()
         axe.xaxis.set_major_locator(mticker.FixedLocator(ticks))
         axe.set_xticklabels(['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'], fontsize=10)
@@ -241,7 +243,7 @@ class Wind:
                     # Polygon version (reference):
                     axe.fill([b[i], b[i], b[i + 1], b[i + 1]],
                              [g.iloc[i, j], g.iloc[i, j + 1], g.iloc[i, j + 1], g.iloc[i, j]],
-                             color=col, edgecolor='black', linewidth=2)
+                             color=col, edgecolor='black', linewidth=linewidth)
 
         return axe
 

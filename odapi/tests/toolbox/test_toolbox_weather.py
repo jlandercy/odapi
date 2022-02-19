@@ -4,6 +4,7 @@ import unittest
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from odapi.toolbox.weather import Wind, Humidity, Sun, Weather
 
@@ -102,6 +103,27 @@ class WindTest(unittest.TestCase):
             index = Wind.coord_index(cycles, order=r)
             #print(pd.DataFrame({'gonio': self.gonio_cycles, 'tags': tags, 'index': index}))
 
+
+class WindPlots(unittest.TestCase):
+    """Test Wind Direction Arithmetic"""
+
+    def setUp(self):
+        self.theta = np.arange(0, 180, 360/8)
+        self.data = np.arange(self.theta.size)
+        self.frame = pd.DataFrame({"WD": self.theta, "x": self.data})
+        print(self.frame)
+
+    def test_prepare_data(self):
+        x = Wind.prepare_data(self.frame, "x", "WD")
+        print(x)
+
+    def x_test_boxplot(self):
+        axe = Wind.boxplot(self.frame, 'x', theta='WD')
+        plt.show()
+
+    def x_test_windrose(self):
+        axe = Wind.rose(self.frame, 'x', theta='WD')
+        plt.show()
 
 
 def main():

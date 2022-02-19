@@ -70,7 +70,7 @@ class Wind:
         if isinstance(x, pd.DataFrame):
             return x.apply(Wind.coord_index, order=order)
         elif isinstance(x, collections.abc.Iterable):
-            return pd.Series(x, dtype=np.float).apply(Wind.coord_index, order=order)
+            return pd.Series(x, dtype="float").apply(Wind.coord_index, order=order)
         else:
             nB, dB = Wind.coord_bin(order=order)
             return np.floor(((x + dB/2) / dB) % nB)
@@ -149,6 +149,17 @@ class Wind:
         cmap = mpl.colors.LinearSegmentedColormap.from_list('Custom cmap', cmaplist, len(q) - 1)
         norm = mpl.colors.BoundaryNorm(q, cmap.N)
         return cmap, norm
+
+    @staticmethod
+    def prepare_data(data, x, theta, order=3):
+        wlabel = data[theta].apply(Wind.direction, order=order)
+        windex = data[theta].apply(Wind.coord_index, order=order).replace({-1: np.nan})
+        frame = pd.DataFrame({x: data[x], theta: data[theta], "direction": wlabel[0], "index": windex})
+        return frame
+
+    @staticmethod
+    def group_data(data, x, theta, order=3):
+        pass
 
     @staticmethod
     def boxplot(data, x, theta='WD/41R001 (°G)'):
@@ -241,15 +252,15 @@ class Wind:
             for i in range(g.shape[0]):
                 for j in range(g.shape[1] - 1):
                     col = cmap(1.1 * g.columns.levels[1][j])
-                    if mode == "polygon":
+                    if mode == "bar":
+                        axe.bar(b[i] + db / 2, g.iloc[i, j + 1] - g.iloc[i, j], width=db, bottom=g.iloc[i, j],
+                                color=col, edgecolor=edgecolor, linewidth=linewidth)
+                    elif mode == "polygon":
                         axe.fill([b[i], b[i], b[i + 1], b[i + 1]],
                                  [g.iloc[i, j], g.iloc[i, j + 1], g.iloc[i, j + 1], g.iloc[i, j]],
                                  color=col, edgecolor=edgecolor, linewidth=linewidth)
-                    elif mode == "bar":
-                        axe.bar(b[i]+db/2, g.iloc[i, j+1] - g.iloc[i, j], width=db, bottom=g.iloc[i, j],
-                                color=col, edgecolor=edgecolor, linewidth=linewidth)
                     else:
-                        raise ValueError("Rose mode must be in {polygon, bar}")
+                        raise ValueError("Rose mode must be in {bar, polygon}")
 
         return axe
 

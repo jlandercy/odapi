@@ -247,16 +247,10 @@ class Wind:
         axe.set_xticklabels(['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'], fontsize=10)
         axe.set_title(x)
 
-        # Add Color Bar:
-        if cbar:
-            axb = fig.add_axes([0.9, 0.1, 0.02, 0.8])
-            cbar = mpl.colorbar.ColorbarBase(axb, cmap=cmap, norm=norm)
-            cbar.set_label("Percentile Scale")
-
         # Draw Points:
         if points:
             axe.plot(data[theta].apply(Wind.deg2rad).apply(Wind.gonio2trigo_rad),
-                     data[x], '.', markersize=1, color='black')
+                     data[x], '.', markersize=0.5, color='royalblue')
 
         # Draw Medians:
         if medians:
@@ -269,6 +263,13 @@ class Wind:
         # Draw Percentiles Rose:
         if quantiles:
 
+            # Add Color Bar:
+            if cbar:
+                axb = fig.add_axes([0.9, 0.1, 0.02, 0.8])
+                cbar = mpl.colorbar.ColorbarBase(axb, cmap=cmap, norm=norm)
+                cbar.set_label("Percentile Scale")
+
+            # Add Quantiles:
             for sector in final.to_dict(orient="records"):
                 for k in range(len(frequencies) - 1):
                     if sector["quantiles"]:

@@ -4,6 +4,8 @@ import unittest
 
 import numpy as np
 import pandas as pd
+from scipy import stats
+
 import matplotlib.pyplot as plt
 
 from odapi.toolbox.weather import Wind, Humidity, Sun, Weather
@@ -112,13 +114,33 @@ class WindPlots(unittest.TestCase):
         self.data = np.arange(self.theta.size)
         self.frame = pd.DataFrame({"WD": self.theta, "x": self.data})
 
+    def tearDown(self) -> None:
+        plt.show()
+
+    def generate_frame(self, n=100, x_dist=stats.norm(), t_dist=stats.uniform(scale=360)):
+
+        theta = t_dist.rvs(size=n)
+        data = x_dist.rvs(size=n)
+
+        frame = pd.DataFrame({
+            "theta": theta,
+            "data": theta*data
+        })
+        return frame
+
+    def test_random_frame(self):
+        x = self.generate_frame(n=500)
+        axe = Wind.boxplot(x, 'data', theta="theta")
+        axe = Wind.rose(x, 'data', theta="theta", frequencies=np.arange(0.1, 0.91, 0.1))
+        axe = Wind.rose(x, 'data', theta="theta", quantiles=False, points=True)
+
+
     def test_boxplot(self):
         axe = Wind.boxplot(self.frame, 'x', theta='WD')
-        plt.show()
+        #plt.show()
 
     def test_windrose(self):
         axe = Wind.rose(self.frame, 'x', theta='WD')
-        plt.show()
 
 
 def main():

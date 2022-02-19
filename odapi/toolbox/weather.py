@@ -158,50 +158,61 @@ class Wind:
         return frame
 
     @staticmethod
-    def quantiles(data, frequencies=np.arange(0.0, 1.01, 0.1)):
+    def quantiles(data, frequencies=None):
+        if frequencies is None:
+            frequencies = np.arange(0.0, 1.01, 0.1)
         if data:
             return pd.Series(data).quantile(frequencies).to_list()
         else:
             return []
 
     @staticmethod
-    def group_data(data, x, theta, order=3):
+    def group_data(data, x, theta, order=3, frequencies=None):
         frame = Wind.prepare_data(data, x, theta, order=order).dropna(subset=[x])
         labels = Wind.coordinates(order=order).set_index("label")
         groups = frame.groupby("label")[x].agg(["count", "mean", "median", list])
         final = labels.merge(groups, left_index=True, right_index=True, how='left')
         final["count"] = final["count"].fillna(0).astype(int)
         final["list"] = final["list"].fillna("").apply(list)
-        final["quantiles"] = final["list"].apply(Wind.quantiles)
+        final["quantiles"] = final["list"].apply(Wind.quantiles, frequencies=frequencies)
+        final["coord_trigo"] = final["coord"].apply(Wind.gonio2trigo_deg).apply(Wind.deg2rad)
+        final["lower_trigo"] = final["lower"].apply(Wind.gonio2trigo_deg).apply(Wind.deg2rad)
+        final["upper_trigo"] = final["upper"].apply(Wind.gonio2trigo_deg).apply(Wind.deg2rad)
         return final
 
     @staticmethod
-    def boxplot(data, x, theta='WD/41R001 (°G)'):
+    def boxplot(data, x, theta='WD/41R001 (°G)', order=3):
         """
         Return distribution by wind direction
         :param data:
         :param x:
         :param theta:
+        :param order:
         :return:
         """
-        wd = data[[theta]].apply(Wind.direction)
-        bo = Wind.coordinates()
+
+        final = Wind.group_data(data, x, theta=theta, order=order)
+
         fig, axes = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [7, 3]})
-        pair = pd.concat([data[x], wd], axis=1).dropna()
-        pair.boxplot(x, by=theta, positions=bo.sort_values('label').index, rot=90, ax=axes[0])
-        pair.groupby(theta)[x].count()[bo.label].plot(kind='bar', ax=axes[1])
+
+        axes[0].boxplot(final["list"], showmeans=True, meanprops={"marker": "x", "color": "red"})
+        axes[1].bar(np.arange(final.shape[0]) + 1, height=final["count"])
+        axes[1].set_xticklabels(final.index, rotation=90)
+
         fig.suptitle('')
         axes[0].set_title("Distribution by Wind Directions")
         axes[0].set_ylabel(x)
         axes[1].set_ylabel("Count")
         axes[1].set_xlabel("Wind Direction")
+        axes[0].grid()
         axes[1].grid()
+
         return axes
 
     @staticmethod
-    def rose(data, x, theta='WD/41R001 (°G)', qbins=True, points=False, means=True, cbar=True,
-             q=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6),
-             mode="bar", edgecolor="white", linewidth=0.0):
+    def rose(data, x, theta='WD/41R001 (°G)', quantiles=True, order=3, points=False, medians=True, means=True,
+             cbar=True, frequencies=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6),
+             edgecolor="white", linewidth=0.0):
         """
         Return polar axe with percentile rose, points and means
 
@@ -212,10 +223,9 @@ class Wind:
         :param points: Draw experimental points on Rose
         :param means: Draw means on Rose
         :param cbar: Draw color bar beside rose
-        :param q: Percentile bins boundaries
+        :param frequencies: Percentile bins boundaries
         :param cmap: Colormap theme
         :param figsize: Figure Size
-        :param mode: Plot mode
         :param edgecolor: Bar edge color
         :param linewidth: Bar linewidth
 
@@ -223,7 +233,10 @@ class Wind:
         """
 
         # Color Map:
-        cmap, norm = Wind.colormap(cmap=cmap, q=q)
+        cmap, norm = Wind.colormap(cmap=cmap, q=frequencies)
+
+        # Aggregate
+        final = Wind.group_data(data, x, theta=theta, order=order, frequencies=frequencies)
 
         # Create Polar Axis (projection cannot be changed after axe creation):
         fig, axe = plt.subplots(figsize=figsize, subplot_kw={'projection': 'polar'})
@@ -238,43 +251,35 @@ class Wind:
         if cbar:
             axb = fig.add_axes([0.9, 0.1, 0.02, 0.8])
             cbar = mpl.colorbar.ColorbarBase(axb, cmap=cmap, norm=norm)
-            cbar.set_label("Percentile Bins")
-
-        # Bins info:
-        b = Wind.gonio2trigo_rad(Wind.deg2rad(Wind.coord_bins()))
-        db = b[1] - b[0]
+            cbar.set_label("Percentile Scale")
 
         # Draw Points:
         if points:
             axe.plot(data[theta].apply(Wind.deg2rad).apply(Wind.gonio2trigo_rad),
-                     data[x], '.', markersize=0.35, color='k')
+                     data[x], '.', markersize=1, color='black')
+
+        # Draw Medians:
+        if medians:
+            axe.plot(final["coord_trigo"], final["median"], color='green', marker='D', markersize=3, linewidth=0)
 
         # Draw Means:
         if means:
-            m = data.groupby(Wind.coord_index(data[theta]))[x].mean()
-            axe.plot(b[:-1] + db / 2, m, color='green', marker='o', markersize=3, linewidth=0)
+            axe.plot(final["coord_trigo"], final["mean"], color='red', marker='x', markersize=3, linewidth=0)
 
         # Draw Percentiles Rose:
-        if qbins:
+        if quantiles:
 
-            # Compute Rose:
-            w = data[theta].apply(Wind.coord_index).replace({-1: np.nan}).rename('bins')
-            r = pd.concat([data[x], w], axis=1).dropna()
-            g = r.groupby('bins').quantile(q).unstack()
-
-            # Render Rose:
-            for i in range(g.shape[0]):
-                for j in range(g.shape[1] - 1):
-                    col = cmap(1.1 * g.columns.levels[1][j])
-                    if mode == "bar":
-                        axe.bar(b[i] + db / 2, g.iloc[i, j + 1] - g.iloc[i, j], width=db, bottom=g.iloc[i, j],
-                                color=col, edgecolor=edgecolor, linewidth=linewidth)
-                    elif mode == "polygon":
-                        axe.fill([b[i], b[i], b[i + 1], b[i + 1]],
-                                 [g.iloc[i, j], g.iloc[i, j + 1], g.iloc[i, j + 1], g.iloc[i, j]],
-                                 color=col, edgecolor=edgecolor, linewidth=linewidth)
-                    else:
-                        raise ValueError("Rose mode must be in {bar, polygon}")
+            for sector in final.to_dict(orient="records"):
+                for k in range(len(frequencies) - 1):
+                    if sector["quantiles"]:
+                        col = cmap(frequencies[k] + 0.0001)
+                        axe.bar(
+                            sector["coord_trigo"],
+                            sector["quantiles"][k+1] - sector["quantiles"][k],
+                            width=sector["upper_trigo"] - sector["lower_trigo"],
+                            bottom=sector["quantiles"][k],
+                            color=col, edgecolor=edgecolor, linewidth=linewidth
+                        )
 
         return axe
 

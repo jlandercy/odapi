@@ -162,7 +162,10 @@ class Wind:
         frame = Wind.prepare_data(data, x, theta, order=order).dropna(subset=[x])
         labels = Wind.coordinates(order=order).set_index("label")
         groups = frame.groupby("label")[x].agg(["count", "mean", "median", list])
-        return groups.merge(labels, left_index=True, right_index=True, how='right')
+        final = groups.merge(labels, left_index=True, right_index=True, how='right')
+        final["count"] = final["count"].fillna(0).astype(int)
+        final["list"] = final["list"].apply(lambda z: [] if np.isnan(z) else z).apply(lambda z: list(sorted(z)))
+        return final
 
     @staticmethod
     def boxplot(data, x, theta='WD/41R001 (°G)'):

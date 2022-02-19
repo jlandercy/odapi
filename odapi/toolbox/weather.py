@@ -158,13 +158,21 @@ class Wind:
         return frame
 
     @staticmethod
+    def quantiles(data, frequencies=np.arange(0.0, 1.01, 0.1)):
+        if data:
+            return pd.Series(data).quantile(frequencies).to_list()
+        else:
+            return []
+
+    @staticmethod
     def group_data(data, x, theta, order=3):
         frame = Wind.prepare_data(data, x, theta, order=order).dropna(subset=[x])
         labels = Wind.coordinates(order=order).set_index("label")
         groups = frame.groupby("label")[x].agg(["count", "mean", "median", list])
-        final = groups.merge(labels, left_index=True, right_index=True, how='right')
+        final = labels.merge(groups, left_index=True, right_index=True, how='left')
         final["count"] = final["count"].fillna(0).astype(int)
-        final["list"] = final["list"].apply(lambda z: [] if np.isnan(z) else z).apply(lambda z: list(sorted(z)))
+        final["list"] = final["list"].fillna("").apply(list)
+        final["quantiles"] = final["list"].apply(Wind.quantiles)
         return final
 
     @staticmethod

@@ -108,14 +108,17 @@ class WindPlots(unittest.TestCase):
     """Test Wind Direction Arithmetic"""
 
     def setUp(self):
-        self.theta = np.arange(0, 180, 360/8)
+        self.theta = np.arange(0, 180, 360/60)
         self.data = np.arange(self.theta.size)
         self.frame = pd.DataFrame({"WD": self.theta, "x": self.data})
-        print(self.frame)
+        #print(self.frame)
 
     def test_prepare_data(self):
-        x = Wind.group_data(self.frame, "x", "WD")
+        x = Wind.group_data(self.frame, "x", "WD", order=2)
         print(x)
+        fig, axe = plt.subplots()
+        axe.boxplot(x["list"])
+        plt.show()
 
     def x_test_boxplot(self):
         axe = Wind.boxplot(self.frame, 'x', theta='WD')

@@ -114,7 +114,7 @@ class WindPlots(unittest.TestCase):
         print(self.frame)
 
     def test_prepare_data(self):
-        x = Wind.prepare_data(self.frame, "x", "WD")
+        x = Wind.group_data(self.frame, "x", "WD")
         print(x)
 
     def x_test_boxplot(self):

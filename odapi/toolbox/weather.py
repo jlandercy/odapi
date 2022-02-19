@@ -154,12 +154,15 @@ class Wind:
     def prepare_data(data, x, theta, order=3):
         wlabel = data[theta].apply(Wind.direction, order=order)
         windex = data[theta].apply(Wind.coord_index, order=order).replace({-1: np.nan})
-        frame = pd.DataFrame({x: data[x], theta: data[theta], "direction": wlabel[0], "index": windex})
+        frame = pd.DataFrame({x: data[x], theta: data[theta], "label": wlabel[0], "index": windex})
         return frame
 
     @staticmethod
     def group_data(data, x, theta, order=3):
-        pass
+        frame = Wind.prepare_data(data, x, theta, order=order).dropna(subset=[x])
+        labels = Wind.coordinates(order=order).set_index("label")
+        groups = frame.groupby("label")[x].agg(["count", "mean", "median", list])
+        return groups.merge(labels, left_index=True, right_index=True, how='right')
 
     @staticmethod
     def boxplot(data, x, theta='WD/41R001 (°G)'):

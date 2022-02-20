@@ -155,29 +155,33 @@ class Wind:
         wlabel = data[theta].apply(Wind.direction, order=order)
         windex = data[theta].apply(Wind.coord_index, order=order).replace({-1: np.nan})
         frame = pd.DataFrame({x: data[x], theta: data[theta], "label": wlabel[0], "index": windex})
+        frame["label"] = pd.Categorical(frame["label"], categories=Wind.coord_labels(order=order), ordered=True)
         return frame
 
     @staticmethod
-    def quantiles(data, frequencies=None):
+    def group_data(data, x, theta, order=3, frequencies=None):
+
         if frequencies is None:
             frequencies = np.arange(0.0, 1.01, 0.1)
-        if data:
-            return pd.Series(data).quantile(frequencies).to_list()
-        else:
-            return []
 
-    @staticmethod
-    def group_data(data, x, theta, order=3, frequencies=None):
         frame = Wind.prepare_data(data, x, theta, order=order).dropna(subset=[x])
         labels = Wind.coordinates(order=order).set_index("label")
-        groups = frame.groupby("label")[x].agg(["count", "mean", "median", list])
-        final = labels.merge(groups, left_index=True, right_index=True, how='left')
-        final["count"] = final["count"].fillna(0).astype(int)
-        final["list"] = final["list"].fillna("").apply(list)
-        final["quantiles"] = final["list"].apply(Wind.quantiles, frequencies=frequencies)
+        stats = frame.groupby("label")[x].agg(["count", "mean", "median"])
+
+        quantiles = frame.groupby("label")[x].quantile(frequencies).reset_index()
+        quantiles = quantiles.groupby("label")[x].agg(list).rename("quantiles").to_frame()
+        print(quantiles)
+
+        final = labels.merge(stats, left_index=True, right_index=True)\
+                      .merge(quantiles, left_index=True, right_index=True)
+
+        #final["count"] = final["count"].fillna(0).astype(int)
+        #final["quantiles"] = final["quantiles"].fillna('').apply(list)
+
         final["coord_trigo"] = final["coord"].apply(Wind.gonio2trigo_deg).apply(Wind.deg2rad)
         final["lower_trigo"] = final["lower"].apply(Wind.gonio2trigo_deg).apply(Wind.deg2rad)
         final["upper_trigo"] = final["upper"].apply(Wind.gonio2trigo_deg).apply(Wind.deg2rad)
+
         return final
 
     @staticmethod
@@ -191,20 +195,19 @@ class Wind:
         :return:
         """
 
-        final = Wind.group_data(data, x, theta=theta, order=order)
+        final = Wind.prepare_data(data, x, theta=theta, order=order)
 
         fig, axes = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [7, 3]})
 
-        axes[0].boxplot(final["list"], showmeans=True, meanprops={"marker": "x", "color": "red"})
-        axes[1].bar(np.arange(final.shape[0]) + 1, height=final["count"])
-        axes[1].set_xticklabels(final.index, rotation=90)
+        final.boxplot(column=x, by="label", ax=axes[0],
+                      showmeans=True, meanprops={"marker": "x", "color": "red"})
+        final.groupby("label")[x].count().plot(kind="bar", ax=axes[1], rot=90)
 
         fig.suptitle('')
         axes[0].set_title("Distribution by Wind Directions")
         axes[0].set_ylabel(x)
         axes[1].set_ylabel("Count")
         axes[1].set_xlabel("Wind Direction")
-        axes[0].grid()
         axes[1].grid()
 
         return axes

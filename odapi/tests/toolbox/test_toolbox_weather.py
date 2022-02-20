@@ -129,15 +129,21 @@ class WindPlots(unittest.TestCase):
         return frame
 
     def test_random_frame(self):
-        x = self.generate_frame(n=500)
+        x = self.generate_frame(n=10)
+        print(x)
+        y = Wind.prepare_data(x, "data", theta="theta")
+        print(y)
+        g = Wind.group_data(x, "data", theta="theta")
+        print(g)
+
+    def test_random_plots(self):
+        x = self.generate_frame(n=10000)
         axe = Wind.boxplot(x, 'data', theta="theta")
         axe = Wind.rose(x, 'data', theta="theta", frequencies=np.arange(0.1, 0.91, 0.1))
         axe = Wind.rose(x, 'data', theta="theta", quantiles=False, points=True)
 
-
     def test_boxplot(self):
         axe = Wind.boxplot(self.frame, 'x', theta='WD')
-        #plt.show()
 
     def test_windrose(self):
         axe = Wind.rose(self.frame, 'x', theta='WD')

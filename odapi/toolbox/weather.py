@@ -192,12 +192,13 @@ class Wind:
         """
 
         final = Wind.prepare_data(data, x, theta=theta, order=order)
+        counts = final.groupby("label")[x].count()
 
         fig, axes = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [7, 3]})
 
-        final.boxplot(column=x, by="label", ax=axes[0],
+        final.boxplot(column=x, by="label", ax=axes[0], positions=np.arange(counts.shape[0]),
                       showmeans=True, meanprops={"marker": "x", "color": "red"})
-        final.groupby("label")[x].count().plot(kind="bar", ax=axes[1], rot=90)
+        counts.plot(kind="bar", ax=axes[1], rot=90)
 
         fig.suptitle('')
         axes[0].set_title("Distribution by Wind Directions")

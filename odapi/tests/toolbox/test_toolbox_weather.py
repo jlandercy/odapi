@@ -130,11 +130,8 @@ class WindPlots(unittest.TestCase):
 
     def test_random_frame(self):
         x = self.generate_frame(n=10)
-        print(x)
         y = Wind.prepare_data(x, "data", theta="theta")
-        print(y)
         g = Wind.group_data(x, "data", theta="theta")
-        print(g)
 
     def test_random_plots(self):
         x = self.generate_frame(n=10000)

@@ -168,15 +168,11 @@ class Wind:
         labels = Wind.coordinates(order=order).set_index("label")
         stats = frame.groupby("label")[x].agg(["count", "mean", "median"])
 
-        quantiles = frame.groupby("label")[x].quantile(frequencies).reset_index()
+        quantiles = frame.groupby("label")[x].quantile(frequencies).dropna().reset_index()
         quantiles = quantiles.groupby("label")[x].agg(list).rename("quantiles").to_frame()
-        print(quantiles)
 
         final = labels.merge(stats, left_index=True, right_index=True)\
                       .merge(quantiles, left_index=True, right_index=True)
-
-        #final["count"] = final["count"].fillna(0).astype(int)
-        #final["quantiles"] = final["quantiles"].fillna('').apply(list)
 
         final["coord_trigo"] = final["coord"].apply(Wind.gonio2trigo_deg).apply(Wind.deg2rad)
         final["lower_trigo"] = final["lower"].apply(Wind.gonio2trigo_deg).apply(Wind.deg2rad)

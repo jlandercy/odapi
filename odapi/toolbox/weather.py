@@ -196,8 +196,10 @@ class Wind:
 
         fig, axes = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [7, 3]})
 
-        final.boxplot(column=x, by="label", ax=axes[0], positions=np.arange(counts.shape[0]),
-                      showmeans=True, meanprops={"marker": "x", "color": "red"})
+        final.boxplot(
+            column=x, by="label", positions=np.arange(counts.shape[0]), ax=axes[0],
+            medianprops={"color": "green"}, showmeans=True, meanprops={"marker": "x", "markeredgecolor": "red"}
+        )
         counts.plot(kind="bar", ax=axes[1], rot=90)
 
         fig.suptitle('')
@@ -212,7 +214,7 @@ class Wind:
     @staticmethod
     def rose(data, x, theta='WD/41R001 (°G)', quantiles=True, order=3, points=False, medians=True, means=True,
              cbar=True, frequencies=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6),
-             edgecolor="white", linewidth=0.0):
+             edgecolor="white", linewidth=0.0, mean_linewidth=0.0, median_linewidth=0.0):
         """
         Return polar axe with percentile rose, points and means
 
@@ -237,6 +239,8 @@ class Wind:
 
         # Aggregate
         final = Wind.group_data(data, x, theta=theta, order=order, frequencies=frequencies)
+        #loops = final.append(final.iloc[0,:]) # Deprecated
+        loops = pd.concat([final, final.iloc[0,:].to_frame().T], axis=0)
 
         # Create Polar Axis (projection cannot be changed after axe creation):
         fig, axe = plt.subplots(figsize=figsize, subplot_kw={'projection': 'polar'})
@@ -254,11 +258,17 @@ class Wind:
 
         # Draw Medians:
         if medians:
-            axe.plot(final["coord_trigo"], final["median"], color='green', marker='D', markersize=3, linewidth=0)
+            axe.plot(
+                loops["coord_trigo"], loops["median"],
+                color='green', marker='D', markersize=3, linewidth=median_linewidth
+            )
 
         # Draw Means:
         if means:
-            axe.plot(final["coord_trigo"], final["mean"], color='red', marker='x', markersize=3, linewidth=0)
+            axe.plot(
+                loops["coord_trigo"], loops["mean"],
+                color='red', marker='x', markersize=3, linewidth=mean_linewidth
+            )
 
         # Draw Percentiles Rose:
         if quantiles:

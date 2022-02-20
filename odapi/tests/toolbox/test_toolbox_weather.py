@@ -134,7 +134,7 @@ class WindPlots(unittest.TestCase):
         g = Wind.group_data(x, "data", theta="theta")
 
     def test_random_plots(self):
-        x = self.generate_frame(n=1000)
+        x = self.generate_frame(n=10000)
         axe = Wind.boxplot(x, 'data', theta="theta")
         axe = Wind.rose(x, 'data', theta="theta", frequencies=np.arange(0.1, 0.91, 0.1))
         axe = Wind.rose(x, 'data', theta="theta", quantiles=False, points=True, mean_linewidth=1.5)

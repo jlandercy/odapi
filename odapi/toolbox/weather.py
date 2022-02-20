@@ -214,14 +214,14 @@ class Wind:
     @staticmethod
     def rose(data, x, theta='WD/41R001 (°G)', quantiles=True, order=3, points=False, medians=True, means=True,
              cbar=True, frequencies=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6),
-             edgecolor="white", linewidth=0.0, mean_linewidth=0.0, median_linewidth=0.0):
+             edgecolor="white", linewidth=0.0, mean_linewidth=0.0, median_linewidth=0.0, width_factor=0.98):
         """
         Return polar axe with percentile rose, points and means
 
         :param data: DataFrame holding time series including Wind Directions
         :param x: DataFrame Key to plot on Percentile Rose
         :param theta: DataFrame Key to identify Wind Directions series in Goniometric Degrees
-        :param qbins: Draw Percentile bins
+        :param quantiles: Draw Percentile bins
         :param points: Draw experimental points on Rose
         :param means: Draw means on Rose
         :param cbar: Draw color bar beside rose
@@ -287,7 +287,7 @@ class Wind:
                         axe.bar(
                             sector["coord_trigo"],
                             sector["quantiles"][k+1] - sector["quantiles"][k],
-                            width=sector["upper_trigo"] - sector["lower_trigo"],
+                            width=(sector["upper_trigo"] - sector["lower_trigo"])*width_factor,
                             bottom=sector["quantiles"][k],
                             color=col, edgecolor=edgecolor, linewidth=linewidth
                         )

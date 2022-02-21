@@ -214,7 +214,7 @@ class Wind:
     @staticmethod
     def rose(data, x, theta='WD/41R001 (°G)', quantiles=True, order=3, points=False, medians=True, means=True,
              cbar=True, frequencies=np.arange(0.0, 1.01, 0.1), cmap='Spectral_r', figsize=(8, 6),
-             edgecolor="white", linewidth=0.0, mean_linewidth=0.0, median_linewidth=0.0, width_factor=0.98):
+             edgecolor="white", linewidth=0.0, mean_linewidth=0.0, median_linewidth=0.0, width_factor=1.0):
         """
         Return polar axe with percentile rose, points and means
 

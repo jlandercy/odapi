@@ -19,6 +19,23 @@ class IrcelineTests(TimeSerieAPITest, unittest.TestCase):
         super().setUpClass()
 
 
+class DatasetTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.client = Irceline()
+
+    def test_dataset(self):
+        meta = self.client.select(sitekey="41")
+        records = self.client.get_records(meta, start="2019-01-01", stop="2022-03-01")
+        data = records.merge(meta[["serieid", "seriekey"]])
+        data = data.pivot_table(index="start", columns="seriekey", values="value")
+        data.to_pickle("data.pickle", protocol=3)
+        print(data)
+
+    def test_conver(self):
+        data = pd.read_pickle("data.pickle")
+        data.to_pickle("data.pickle", protocol=0)
+
 def main():
     unittest.main()
     sys.exit(0)

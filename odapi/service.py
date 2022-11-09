@@ -35,7 +35,8 @@ def main():
     import pathlib
 
     from influxdb import InfluxDBClient
-    from apscheduler.schedulers.blocking import BlockingScheduler
+    #from apscheduler.schedulers.blocking import BlockingScheduler
+    from apscheduler.schedulers.background import BackgroundScheduler
 
     # CLI Arguments:
     clargs = argparse.ArgumentParser(description='Irceline Service')
@@ -44,7 +45,7 @@ def main():
     args = clargs.parse_args()
 
     # Create Scheduler:
-    sched = BlockingScheduler(timezone='UTC')
+    sched = BackgroundScheduler(timezone='UTC')
     t1 = pd.Timestamp.utcnow()
 
     # Read Program file:

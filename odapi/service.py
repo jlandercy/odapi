@@ -63,8 +63,8 @@ def main():
         settings.logger.info("INFLUX created client: {}".format(dbcon))
         settings.logger.info("INFLUX allowed databases: {}".format(dbcon.get_list_database()))
 
-        t = t1.floor('1S').replace(**v.get('sync', {})).to_pydatetime()
-        sched.add_job(feed, 'interval', id=k, **v['interval'], next_run_time=t,
+        t = t1.floor('1S').replace(**v.get('sync', {}))
+        sched.add_job(feed, 'interval', id=k, **v['interval'], next_run_time=t1.to_pydatetime(),
                       misfire_grace_time=5, coalesce=True, args=(dbcon,), kwargs=v)
         settings.logger.info("SCHED job '{}' registred (sync={}): {}".format(k, t, v))
 

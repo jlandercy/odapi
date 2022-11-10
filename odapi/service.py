@@ -41,7 +41,7 @@ def main():
     clargs = argparse.ArgumentParser(description='Irceline Service')
     clargs.add_argument('--program', type=str, default=str(settings.user / 'program.json'),
                         help='Program definition path (eg.: ~/odapi/program.json)')
-    clargs.add_argument('--verbose', type=int, default=10, help='Verbose Level')
+    clargs.add_argument('--verbose', type=int, default=40, help='Verbose Level')
     args = clargs.parse_args()
 
     # Set Log Level

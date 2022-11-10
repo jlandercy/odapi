@@ -35,8 +35,7 @@ def main():
     import pathlib
 
     from influxdb import InfluxDBClient
-    #from apscheduler.schedulers.blocking import BlockingScheduler
-    from apscheduler.schedulers.background import BackgroundScheduler
+    from apscheduler.schedulers.blocking import BlockingScheduler
 
     # CLI Arguments:
     clargs = argparse.ArgumentParser(description='Irceline Service')
@@ -49,7 +48,7 @@ def main():
     settings.logger.setLevel(args.verbose)
 
     # Create Scheduler:
-    sched = BackgroundScheduler(timezone='UTC')
+    sched = BlockingScheduler(timezone='UTC')
     t1 = pd.Timestamp.utcnow()
 
     # Read Program file:
@@ -64,8 +63,8 @@ def main():
         settings.logger.info("INFLUX created client: {}".format(dbcon))
         settings.logger.info("INFLUX allowed databases: {}".format(dbcon.get_list_database()))
 
-        t = t1.floor('1S').replace(**v.get('sync', {}))
-        sched.add_job(feed, 'interval', id=k, **v['interval'], next_run_time=t1,
+        t = t1.floor('1S').replace(**v.get('sync', {})).to_pydatetime()
+        sched.add_job(feed, 'interval', id=k, **v['interval'], next_run_time=t,
                       misfire_grace_time=5, coalesce=True, args=(dbcon,), kwargs=v)
         settings.logger.info("SCHED job '{}' registred (sync={}): {}".format(k, t, v))
 

@@ -114,3 +114,4 @@ cred*.json
 # Notebooks:
 .ipynb_checkpoints/
 *.pickle
+/odapi/resources/irceline.json
